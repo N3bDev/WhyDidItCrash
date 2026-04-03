@@ -8,6 +8,7 @@ var config = ParseArguments(args);
 if (config == null)
 {
     PrintUsage();
+    WaitForKeypress();
     return 1;
 }
 
@@ -90,9 +91,21 @@ if (!string.IsNullOrEmpty(config.ExportPath))
     }
 }
 
+WaitForKeypress();
+
 return 0;
 
 // --- Helper methods ---
+
+static void WaitForKeypress()
+{
+    if (!Console.IsOutputRedirected)
+    {
+        Console.WriteLine();
+        Console.WriteLine("  Press any key to exit...");
+        Console.ReadKey(true);
+    }
+}
 
 static AppConfig? ParseArguments(string[] args)
 {
