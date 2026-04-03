@@ -97,11 +97,25 @@ public sealed partial class MinidumpAnalyzer : IAnalyzer
             details["Parameter 1"] = $"0x{param1:X16}";
 
         if (!string.IsNullOrEmpty(faultingDriver))
-            details["Probable Faulting Driver"] = faultingDriver;
+        {
+            var driverInfo = DriverLookup.GetInfo(faultingDriver);
+            details["Probable Faulting Driver"] = driverInfo != null
+                ? $"{faultingDriver} ({driverInfo.Component})"
+                : faultingDriver;
+        }
 
         var shortDesc = $"BSOD: 0x{bugCheckCode:X8} {bsodInfo.Name}";
+        var suggestedAction = bsodInfo.SuggestedAction;
+
         if (!string.IsNullOrEmpty(faultingDriver))
-            shortDesc += $" (driver: {faultingDriver})";
+        {
+            var driverInfo = DriverLookup.GetInfo(faultingDriver);
+            shortDesc += driverInfo != null
+                ? $" (driver: {faultingDriver} - {driverInfo.Component})"
+                : $" (driver: {faultingDriver})";
+            if (driverInfo != null)
+                suggestedAction = driverInfo.Explanation;
+        }
 
         return new CrashEvent
         {
@@ -111,7 +125,7 @@ public sealed partial class MinidumpAnalyzer : IAnalyzer
             Source = "Minidump",
             ShortDescription = shortDesc,
             Explanation = bsodInfo.Explanation,
-            SuggestedAction = bsodInfo.SuggestedAction,
+            SuggestedAction = suggestedAction,
             Details = details,
         };
     }

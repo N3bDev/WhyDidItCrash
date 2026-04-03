@@ -106,6 +106,38 @@ public static class EventIdLookup
             EventSeverity.Info,
             "Informational only."),
 
+        // WHEA hardware errors
+        [("Microsoft-Windows-WHEA-Logger", 17)] = new(
+            "A corrected hardware memory error (ECC) was detected.",
+            EventCategory.MemoryWarning,
+            EventSeverity.Warning,
+            "Corrected errors may accumulate before causing a crash. Monitor frequency. Run Windows Memory Diagnostic."),
+
+        [("Microsoft-Windows-WHEA-Logger", 18)] = new(
+            "A fatal hardware error was logged (uncorrectable).",
+            EventCategory.HardwareWarning,
+            EventSeverity.Critical,
+            "This indicates serious hardware failure (CPU, RAM, or PCIe). Check temperatures, test RAM, update BIOS."),
+
+        [("Microsoft-Windows-WHEA-Logger", 19)] = new(
+            "A corrected hardware error was detected.",
+            EventCategory.HardwareWarning,
+            EventSeverity.Warning,
+            "Monitor frequency of these events. Frequent occurrence suggests degrading hardware."),
+
+        [("Microsoft-Windows-WHEA-Logger", 47)] = new(
+            "A high rate of correctable hardware errors is being throttled.",
+            EventCategory.HardwareWarning,
+            EventSeverity.Warning,
+            "High error rate indicates rapidly degrading hardware. Investigate CPU, RAM, and motherboard health."),
+
+        // Memory diagnostics
+        [("Microsoft-Windows-MemoryDiagnostics-Results", 1201)] = new(
+            "Windows Memory Diagnostic found hardware memory errors.",
+            EventCategory.MemoryWarning,
+            EventSeverity.Critical,
+            "RAM is faulty. Reseat or replace RAM sticks. Test individual sticks with MemTest86."),
+
         // Crash dump
         [("volmgr", 46)] = new(
             "Crash dump initialization failed -- crash dumps will not be created.",

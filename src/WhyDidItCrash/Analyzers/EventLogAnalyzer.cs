@@ -39,7 +39,9 @@ public sealed class EventLogAnalyzer : IAnalyzer
                 (EventID=19 and Provider[@Name='Microsoft-Windows-WindowsUpdateClient']) or
                 (EventID=20 and Provider[@Name='Microsoft-Windows-WindowsUpdateClient']) or
                 (EventID=43 and Provider[@Name='Microsoft-Windows-WindowsUpdateClient']) or
-                (EventID=46 and Provider[@Name='volmgr'])
+                (EventID=46 and Provider[@Name='volmgr']) or
+                (Provider[@Name='Microsoft-Windows-WHEA-Logger'] and (EventID=17 or EventID=18 or EventID=19 or EventID=47)) or
+                (EventID=1201 and Provider[@Name='Microsoft-Windows-MemoryDiagnostics-Results'])
             )
             and TimeCreated[timediff(@SystemTime) <= {millisecondsBack}]
         ]]";
