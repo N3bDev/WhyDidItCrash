@@ -25,7 +25,7 @@ public sealed class EventLogAnalyzer : IAnalyzer
 
         var query = $@"*[System[
             (
-                (EventID=41 and Provider[@Name='Microsoft-Windows-Kernel-Power']) or
+                (Provider[@Name='Microsoft-Windows-Kernel-Power'] and (EventID=41 or EventID=109 or EventID=137)) or
                 (EventID=1001 and (Provider[@Name='Microsoft-Windows-WER-SystemErrorReporting'] or Provider[@Name='BugCheck'])) or
                 (EventID=6008 and Provider[@Name='EventLog']) or
                 (EventID=6006 and Provider[@Name='EventLog']) or
@@ -40,8 +40,9 @@ public sealed class EventLogAnalyzer : IAnalyzer
                 (EventID=20 and Provider[@Name='Microsoft-Windows-WindowsUpdateClient']) or
                 (EventID=43 and Provider[@Name='Microsoft-Windows-WindowsUpdateClient']) or
                 (EventID=46 and Provider[@Name='volmgr']) or
-                (Provider[@Name='Microsoft-Windows-WHEA-Logger'] and (EventID=17 or EventID=18 or EventID=19 or EventID=47)) or
-                (EventID=1201 and Provider[@Name='Microsoft-Windows-MemoryDiagnostics-Results'])
+                (Provider[@Name='Microsoft-Windows-WHEA-Logger'] and (EventID=1 or EventID=17 or EventID=18 or EventID=19 or EventID=20 or EventID=47)) or
+                (EventID=1201 and Provider[@Name='Microsoft-Windows-MemoryDiagnostics-Results']) or
+                (Provider[@Name='Ntfs'] and (EventID=55 or EventID=98 or EventID=137))
             )
             and TimeCreated[timediff(@SystemTime) <= {millisecondsBack}]
         ]]";

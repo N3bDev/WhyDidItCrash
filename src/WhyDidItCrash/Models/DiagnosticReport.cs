@@ -7,4 +7,7 @@ public sealed class DiagnosticReport
     public List<CrashEvent> Events { get; init; } = new();
     public HardwareHealthReport HardwareHealth { get; init; } = new();
     public List<string> Warnings { get; init; } = new();
+    public int HealthScore { get; set; }
+    public string Verdict { get; set; } = "";
+    public List<TrendInsight> Insights { get; set; } = new();
 }

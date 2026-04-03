@@ -138,6 +138,51 @@ public static class EventIdLookup
             EventSeverity.Critical,
             "RAM is faulty. Reseat or replace RAM sticks. Test individual sticks with MemTest86."),
 
+        // WHEA additional events
+        [("Microsoft-Windows-WHEA-Logger", 1)] = new(
+            "A fatal hardware error occurred (WHEA Event ID 1).",
+            EventCategory.HardwareWarning,
+            EventSeverity.Critical,
+            "Check CPU, RAM, and PCIe devices. Update BIOS/firmware. Test RAM."),
+
+        [("Microsoft-Windows-WHEA-Logger", 20)] = new(
+            "A correctable machine check error was detected.",
+            EventCategory.HardwareWarning,
+            EventSeverity.Warning,
+            "Monitor frequency. Frequent occurrences suggest degrading CPU or memory."),
+
+        // Kernel-Power additional events
+        [("Microsoft-Windows-Kernel-Power", 109)] = new(
+            "The kernel power manager detected a watchdog timeout during a sleep transition.",
+            EventCategory.UnexpectedShutdown,
+            EventSeverity.Critical,
+            "Update all drivers (especially storage and network). Check BIOS power settings."),
+
+        [("Microsoft-Windows-Kernel-Power", 137)] = new(
+            "Firmware performance data indicates the BIOS took longer than expected during boot.",
+            EventCategory.HardwareWarning,
+            EventSeverity.Warning,
+            "Update BIOS. Disable unnecessary devices in BIOS. Check disk health."),
+
+        // NTFS file system errors
+        [("Ntfs", 55)] = new(
+            "A corruption was discovered in the NTFS file system data structure on disk.",
+            EventCategory.DiskError,
+            EventSeverity.Critical,
+            "Run 'chkdsk /f /r' immediately. Back up important data. Check SMART status."),
+
+        [("Ntfs", 98)] = new(
+            "The NTFS volume could not be checked for errors.",
+            EventCategory.DiskError,
+            EventSeverity.Warning,
+            "Schedule a chkdsk on next reboot: 'chkdsk /f /r' and restart."),
+
+        [("Ntfs", 137)] = new(
+            "The NTFS volume was repaired by the self-healing mechanism.",
+            EventCategory.DiskError,
+            EventSeverity.Warning,
+            "Self-healing corrected an issue. Monitor for recurring disk errors. Check SMART status."),
+
         // Crash dump
         [("volmgr", 46)] = new(
             "Crash dump initialization failed -- crash dumps will not be created.",

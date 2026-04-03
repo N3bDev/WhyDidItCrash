@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using WhyDidItCrash;
 using WhyDidItCrash.Lookups;
 using WhyDidItCrash.Models;
 
@@ -205,7 +206,7 @@ public sealed partial class MinidumpAnalyzer : IAnalyzer
         try
         {
             // Read first 64KB and scan for driver names (.sys files)
-            var bytesToRead = Math.Min(65536, new FileInfo(filePath).Length);
+            var bytesToRead = Math.Min(Constants.MinidumpScanBufferSize, new FileInfo(filePath).Length);
             var buffer = new byte[bytesToRead];
 
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

@@ -1,4 +1,5 @@
 using System.Management;
+using WhyDidItCrash;
 using WhyDidItCrash.Helpers;
 using WhyDidItCrash.Models;
 
@@ -56,7 +57,7 @@ public sealed class HardwareAnalyzer : IAnalyzer
                 var celsius = (tempKelvinTenths / 10.0) - 273.15;
                 report.CpuTempCelsius = celsius;
 
-                if (celsius >= 95)
+                if (celsius >= Constants.CpuTempCritical)
                 {
                     events.Add(new CrashEvent
                     {
@@ -69,7 +70,7 @@ public sealed class HardwareAnalyzer : IAnalyzer
                         SuggestedAction = "Check CPU cooler mounting and thermal paste. Clean dust from fans and heatsinks. Ensure adequate case airflow.",
                     });
                 }
-                else if (celsius >= 80)
+                else if (celsius >= Constants.CpuTempWarning)
                 {
                     events.Add(new CrashEvent
                     {
@@ -225,7 +226,7 @@ public sealed class HardwareAnalyzer : IAnalyzer
                     var healthPercent = (fullChargeCapacity / designCapacity) * 100.0;
                     report.BatteryHealthPercent = healthPercent;
 
-                    if (healthPercent <= 25)
+                    if (healthPercent <= Constants.BatteryHealthCritical)
                     {
                         events.Add(new CrashEvent
                         {
