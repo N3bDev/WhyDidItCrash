@@ -1,0 +1,64 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main, master, "claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore src/WhyDidItCrash/WhyDidItCrash.csproj
+
+      - name: Build
+        run: dotnet build src/WhyDidItCrash/WhyDidItCrash.csproj -c Release --no-restore
+
+      - name: Publish self-contained exe
+        run: |
+          dotnet publish src/WhyDidItCrash/WhyDidItCrash.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:PublishTrimmed=true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WhyDidItCrash-win-x64
+          path: src/WhyDidItCrash/bin/Release/net8.0-windows/win-x64/publish/WhyDidItCrash.exe
+
+      - name: Create Release
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: WhyDidItCrash v1.0.${{ github.run_number }}
+          body: |
+            Portable Windows crash diagnostic tool.
+
+            **Download `WhyDidItCrash.exe` below**, copy it to any Windows machine, and run as Administrator.
+
+            Usage:
+            ```
+            WhyDidItCrash.exe                    # Scan last 30 days
+            WhyDidItCrash.exe --days 7           # Scan last 7 days
+            WhyDidItCrash.exe --export report.txt # Save report to file
+            ```
+          files: src/WhyDidItCrash/bin/Release/net8.0-windows/win-x64/publish/WhyDidItCrash.exe
+          draft: false
+          prerelease: false
